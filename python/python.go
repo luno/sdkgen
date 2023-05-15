@@ -2,7 +2,7 @@ package python
 
 import (
 	"bytes"
-	"os"
+	"embed"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -10,6 +10,9 @@ import (
 
 	"github.com/luno/sdkgen/clientgen"
 )
+
+//go:embed templates/*
+var templates embed.FS
 
 // Generate generates a Python API client.
 func Generate(api clientgen.API) ([]clientgen.File, error) {
@@ -35,11 +38,8 @@ func generatePythonFile(fileName, tplName string, c interface{}) (
 		"boolval":  boolval,
 	}
 
-	filenames := []string{
-		filepath.Join(os.Getenv("GOPATH"),
-			"src/bitx/fe/publicapi/tools/clientgen/python", tplName),
-	}
-	tpl, err := template.New(tplName).Funcs(funcMap).ParseFiles(filenames...)
+	tpl, err := template.New(tplName).Funcs(funcMap).ParseFS(templates,
+		filepath.Join("templates", tplName))
 	if err != nil {
 		return clientgen.File{}, err
 	}
