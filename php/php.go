@@ -2,8 +2,9 @@ package php
 
 import (
 	"bytes"
+	"embed"
+	_ "embed"
 	"fmt"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -11,6 +12,9 @@ import (
 
 	"github.com/luno/sdkgen/clientgen"
 )
+
+//go:embed templates/*
+var templates embed.FS
 
 // Generate generates a PHP API client.
 func Generate(api clientgen.API) ([]clientgen.File, error) {
@@ -67,13 +71,9 @@ func generatePHPFile(fileName, tplName string, c interface{}) (
 		"zeroval":     zeroval,
 	}
 
-	filenames := []string{
-		filepath.Join(os.Getenv("GOPATH"),
-			"src/bitx/fe/publicapi/tools/clientgen/php", tplName),
-		filepath.Join(os.Getenv("GOPATH"),
-			"src/bitx/fe/publicapi/tools/clientgen/php/partials.php.tpl"),
-	}
-	tpl, err := template.New(tplName).Funcs(funcMap).ParseFiles(filenames...)
+	tpl, err := template.New(tplName).Funcs(funcMap).ParseFS(templates,
+		filepath.Join("templates", tplName),
+		filepath.Join("templates", "partials.php.tpl"))
 	if err != nil {
 		return clientgen.File{}, err
 	}

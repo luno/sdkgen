@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -32,10 +31,10 @@ func main() {
 	defaultSpec := "https://api.luno.com/api/exchange/1/schema"
 
 	opts := options{
-		spec:       flag.String("spec", defaultSpec, "URL of swagger spec"),
-		lang:       flag.String("lang", "", "Language to generate"),
-		outdir:     flag.String("outdir", "", "Directory to write the client to"),
-		dryrun:     flag.Bool("dryrun", false, "Just output the generated files"),
+		spec:   flag.String("spec", defaultSpec, "URL of swagger spec"),
+		lang:   flag.String("lang", "", "Language to generate"),
+		outdir: flag.String("outdir", "", "Directory to write the client to"),
+		dryrun: flag.Bool("dryrun", false, "Just output the generated files"),
 	}
 
 	flag.Parse()
@@ -104,7 +103,7 @@ func output(fl []clientgen.File, outdir string) error {
 		}
 
 		absfile := path.Join(outdir, f.RelPath())
-		if err := ioutil.WriteFile(absfile, f.Bytes(), 0644); err != nil {
+		if err := os.WriteFile(absfile, f.Bytes(), 0644); err != nil {
 			return err
 		}
 	}

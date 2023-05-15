@@ -2,8 +2,8 @@ package golang
 
 import (
 	"bytes"
+	"embed"
 	"fmt"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -11,6 +11,9 @@ import (
 
 	"github.com/luno/sdkgen/clientgen"
 )
+
+//go:embed templates/*
+var templates embed.FS
 
 // Generate generates a Go API client.
 func Generate(api clientgen.API) ([]clientgen.File, error) {
@@ -43,9 +46,8 @@ func generateGofile(fileName, tplName string, api clientgen.API) (
 		"enumvalue": enumvalue,
 	}
 
-	filename := filepath.Join(os.Getenv("GOPATH"),
-		"src/bitx/fe/publicapi/tools/clientgen/golang", tplName)
-	tpl, err := template.New(tplName).Funcs(funcMap).ParseFiles(filename)
+	tpl, err := template.New(tplName).Funcs(funcMap).ParseFS(templates,
+		filepath.Join("templates", tplName))
 	if err != nil {
 		return clientgen.File{}, err
 	}
