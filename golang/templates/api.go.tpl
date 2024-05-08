@@ -7,7 +7,9 @@ import (
 
 	"github.com/luno/luno-go/decimal"
 )
-{{range $e := .API.AllEndpoints}}{{with $r := $e.Request}}
+
+{{ range $e := .API.AllEndpoints -}}
+{{ with $r := $e.Request -}}
 // {{$r.Name}} is the request struct for {{$e.Name}}.
 type {{$r.Name}} struct {
 	{{- range $i, $p := $r.StructProps.Properties}}
@@ -21,10 +23,11 @@ type {{$r.Name}} struct {
 	{{propname $p.Name}} {{typename $p.Type}} `json:"{{$p.Name}}" url:"{{$p.Name}}"`
 	{{- end}}
 }
-
 {{end -}}
+
 {{with $r := $e.Response -}}
-{{ if ne $r.Kind 0 }}// {{$r.Name}} is the response struct for {{$e.Name}}.
+{{ if ne $r.Kind 0 -}}
+// {{$r.Name}} is the response struct for {{$e.Name}}.
 type {{$r.Name}} struct {
 	{{- range $i, $p := $r.StructProps.Properties}}
 	{{if ne $i 0}}{{if $p.Description}}
@@ -34,14 +37,16 @@ type {{$r.Name}} struct {
 	{{propname $p.Name}} {{typename $p.Type}} `json:"{{$p.Name}}"`
 	{{- end}}
 }
-{{ end }}
 {{end -}}
+{{end -}}
+
 // {{.Name}} makes a call to {{.Method}} {{.Path}}.
 //
 {{range .Description -}}
 // {{.}}
 {{end -}}
-{{ if ne $e.Response.Kind 0 }}func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) (*{{$e.Response.Name}}, error) {
+{{ if ne $e.Response.Kind 0 -}}
+func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) (*{{$e.Response.Name}}, error) {
 	var res {{$e.Response.Name}}
 	err := cl.do(ctx, "{{$e.Method}}", "{{$e.Path}}", req, &res, {{$e.RequiresAuth}})
 	if err != nil {
@@ -49,7 +54,8 @@ type {{$r.Name}} struct {
 	}
 	return &res, nil
 }
-{{ else }}func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) error {
+{{ else -}}
+func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) error {
 	var res struct{}
 	err := cl.do(ctx, "{{$e.Method}}", "{{$e.Path}}", req, &res, {{$e.RequiresAuth}})
 	if err != nil {
@@ -57,7 +63,7 @@ type {{$r.Name}} struct {
 	}
 	return nil
 }
-{{ end }}
-{{- end}}
+{{ end -}}
+{{ end -}}
 
 // vi: ft=go
