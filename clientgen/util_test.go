@@ -10,13 +10,13 @@ func TestSanitiseVariableName(t *testing.T) {
 	}{
 		{
 			name:      "no change",
-			input:     "HelloWorld123",
-			expOutput: "HelloWorld123",
+			input:     "Hello_World123",
+			expOutput: "Hello_World123",
 		},
 		{
 			name:      "illegal characters",
-			input:     "Hello/Wor)l!d_1&2*3@",
-			expOutput: "HelloWorld123",
+			input:     "Hello_/Wor)l!d1&2*3@",
+			expOutput: "Hello_World123",
 		},
 	}
 
