@@ -134,5 +134,5 @@ func typename(t clientgen.Type) string {
 }
 
 func enumvalue(t, v string) string {
-	return t + strings.Title(strings.ToLower(v))
+	return t + strings.Title(strings.ToLower(clientgen.SanitiseVariableName(v)))
 }
