@@ -1,0 +1,89 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Spec to test conversion",
+    "title": "Test API",
+    "version": "1.0.0"
+  },
+  "host": "api.test.com",
+  "paths": {
+    "/test1": {
+      "post": {
+        "description": "Test1 endpoint",
+        "tags": [
+          "Test1"
+        ],
+        "summary": "Test1 endpoint generation test",
+        "operationId": "Test1",
+        "parameters": [
+          {
+            "type": "string",
+            "example": "Field1 Example",
+            "x-go-name": "Field1Go",
+            "description": "Field1 of test endpoint",
+            "name": "field1",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "example": "Field2 Example",
+            "x-go-name": "Field2Go",
+            "description": "Field2 of test endpoint",
+            "name": "field2",
+            "in": "query",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Test1Response"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Test1Response": {
+      "type": "object",
+      "properties": {
+        "field1": {
+          "description": "field1 desc",
+          "type": "string",
+          "format": "amount",
+          "x-go-name": "field1go"
+        },
+        "field2": {
+          "description": "Unix timestamp in milliseconds",
+          "type": "integer",
+          "format": "timestamp",
+          "x-go-name": "field2go"
+        },
+        "field3": {
+          "description": "Unix timestamp in milliseconds string",
+          "type": "string",
+          "format": "timestamp",
+          "x-go-name": "field3go"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "Test1 Endpoint",
+      "name": "Test1"
+    }
+  ]
+}
