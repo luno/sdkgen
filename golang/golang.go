@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
 
 	"github.com/luno/sdkgen/clientgen"
+	"golang.org/x/tools/imports"
 )
 
 //go:embed templates/*
@@ -64,25 +64,18 @@ func generateGofile(fileName, tplName string, api clientgen.API) (
 	if err := tpl.Execute(raw, c); err != nil {
 		return clientgen.File{}, err
 	}
-	formatted, err := goimports(raw.Bytes())
-	if err == nil {
-		f.Write(formatted)
-	} else {
-		f.Write(raw.Bytes())
+
+	formatted, err := imports.Process("", raw.Bytes(), nil)
+	if err != nil {
+		return clientgen.File{}, err
+	}
+
+	_, err = f.Write(formatted)
+	if err != nil {
+		return clientgen.File{}, err
 	}
 
 	return f, nil
-}
-
-func goimports(in []byte) ([]byte, error) {
-	out := bytes.NewBuffer(nil)
-	cmd := exec.Command("goimports")
-	cmd.Stdin = bytes.NewReader(in)
-	cmd.Stdout = out
-	if err := cmd.Run(); err != nil {
-		return nil, err
-	}
-	return out.Bytes(), nil
 }
 
 func opname(s string) string {
