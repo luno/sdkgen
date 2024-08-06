@@ -275,7 +275,7 @@ func convertType(spec *openapi.Swagger, api *API, p *simpleSchema,
 			return
 		}
 
-		if p.Type[0] == "string" && p.Format == "timestamp" {
+		if (p.Type[0] == "string" || p.Type[0] == "integer") && p.Format == "timestamp" {
 			typ.Kind = KindTimestamp
 			return
 		}
