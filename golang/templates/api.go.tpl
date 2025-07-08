@@ -22,6 +22,10 @@ type {{$r.Name}} struct {
 	{{end -}}
 	{{propname $p.Name}} {{typename $p.Type}} `json:"{{$p.Name}}" url:"{{$p.Name}}"`
 	{{- end}}
+
+	// ForceAuth forces authentication for this request even if the endpoint doesn't require it.
+	// This field is not sent in the request payload.
+	ForceAuth bool `json:"-" url:"-"`
 }
 {{end -}}
 
@@ -48,7 +52,8 @@ type {{$r.Name}} struct {
 {{ if ne $e.Response.Kind 0 -}}
 func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) (*{{$e.Response.Name}}, error) {
 	var res {{$e.Response.Name}}
-	err := cl.do(ctx, "{{$e.Method}}", "{{$e.Path}}", req, &res, {{$e.RequiresAuth}})
+	requiresAuth := {{$e.RequiresAuth}} || req.ForceAuth
+	err := cl.do(ctx, "{{$e.Method}}", "{{$e.Path}}", req, &res, requiresAuth)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +62,8 @@ func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) (*{
 {{ else -}}
 func (cl *Client) {{$e.Name}}(ctx context.Context, req *{{$e.Request.Name}}) error {
 	var res struct{}
-	err := cl.do(ctx, "{{$e.Method}}", "{{$e.Path}}", req, &res, {{$e.RequiresAuth}})
+	requiresAuth := {{$e.RequiresAuth}} || req.ForceAuth
+	err := cl.do(ctx, "{{$e.Method}}", "{{$e.Path}}", req, &res, requiresAuth)
 	if err != nil {
 		return err
 	}
