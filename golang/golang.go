@@ -8,8 +8,9 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/luno/sdkgen/clientgen"
 	"golang.org/x/tools/imports"
+
+	"github.com/luno/sdkgen/clientgen"
 )
 
 //go:embed templates/*
@@ -37,8 +38,8 @@ func Generate(api clientgen.API) ([]clientgen.File, error) {
 }
 
 func generateGofile(fileName, tplName string, api clientgen.API) (
-	clientgen.File, error) {
-
+	clientgen.File, error,
+) {
 	funcMap := template.FuncMap{
 		"opname":    opname,
 		"propname":  propname,
@@ -88,7 +89,7 @@ func propname(s string) string {
 		r := s[i]
 		if r == '_' {
 			if i < len(s)-1 {
-				fmt.Fprintf(b, strings.ToUpper(string(s[i+1])))
+				fmt.Fprint(b, strings.ToUpper(string(s[i+1])))
 				i++
 			}
 			continue
