@@ -1,11 +1,11 @@
 module github.com/luno/sdkgen
 
-go 1.24.3
+go 1.25
 
 require (
 	github.com/go-openapi/spec v0.22.2
 	github.com/google/go-cmp v0.7.0
-	github.com/luno/jettison v0.0.0-20250908151325-9c258b9d6d6e
+	github.com/luno/jettison v0.0.0-20260131114948-c2f7d19a7786
 	golang.org/x/tools v0.41.0
 )
 
