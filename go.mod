@@ -5,7 +5,7 @@ go 1.25
 require (
 	github.com/go-openapi/spec v0.22.3
 	github.com/google/go-cmp v0.7.0
-	github.com/luno/jettison v0.0.0-20260131114948-c2f7d19a7786
+	github.com/luno/jettison v0.0.0-20260204095351-d930f4b24a4f
 	golang.org/x/tools v0.41.0
 )
 
