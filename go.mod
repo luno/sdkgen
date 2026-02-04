@@ -1,6 +1,6 @@
 module github.com/luno/sdkgen
 
-go 1.25
+go 1.25.3
 
 require (
 	github.com/go-openapi/spec v0.22.3
