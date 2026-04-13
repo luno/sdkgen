@@ -201,8 +201,8 @@ func (s sortedStructProps) Less(i, j int) bool {
 }
 
 type simpleSchema struct {
-	Enum       []interface{}
-	Extensions map[string]interface{}
+	Enum       []any
+	Extensions map[string]any
 	Type       openapi.StringOrArray
 	Format     string
 	Ref        openapi.Ref
@@ -372,7 +372,7 @@ func lookupRef(spec *openapi.Swagger, ref string) (string, *openapi.Schema) {
 	return "", nil
 }
 
-func getPackageName(name string, extensions map[string]interface{}) string {
+func getPackageName(name string, extensions map[string]any) string {
 	pkgi := extensions["x-go-package"]
 	if pkgi == nil {
 		return ""

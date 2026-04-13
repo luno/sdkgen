@@ -2,10 +2,11 @@ package clientgen
 
 import (
 	"encoding/json"
+	"testing"
+
 	openapi "github.com/go-openapi/spec"
 	"github.com/google/go-cmp/cmp"
 	"github.com/luno/sdkgen/clientgen/testspecs"
-	"testing"
 )
 
 func TestConvertSpec(t *testing.T) {
@@ -102,6 +103,49 @@ func TestConvertSpec(t *testing.T) {
 
 			if !cmp.Equal(tc.expAPI, api) {
 				t.Errorf("expected api differs:\n%s", cmp.Diff(tc.expAPI, api))
+			}
+		})
+	}
+}
+
+func TestGetPackageName(t *testing.T) {
+	tests := []struct {
+		name       string
+		extName    string
+		extensions map[string]any
+		want       string
+	}{
+		{
+			name:       "nil x-go-package returns empty string",
+			extName:    "MyType",
+			extensions: map[string]any{},
+			want:       "",
+		},
+		{
+			name:       "package name present, no x-go-name override",
+			extName:    "MyType",
+			extensions: map[string]any{"x-go-package": "mypkg"},
+			want:       "mypkg.MyType",
+		},
+		{
+			name:       "package name present with x-go-name override",
+			extName:    "MyType",
+			extensions: map[string]any{"x-go-package": "mypkg", "x-go-name": "OverriddenType"},
+			want:       "mypkg.OverriddenType",
+		},
+		{
+			name:       "different package name",
+			extName:    "Order",
+			extensions: map[string]any{"x-go-package": "trade"},
+			want:       "trade.Order",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := getPackageName(tt.extName, tt.extensions)
+			if got != tt.want {
+				t.Errorf("got %q, want %q", got, tt.want)
 			}
 		})
 	}
