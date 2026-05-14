@@ -135,8 +135,8 @@ func (e Endpoint) ExampleRequest() string {
 			continue
 		}
 		if p.Type.Kind == KindArray {
-			examples := strings.Split(p.Example, ",")
-			for _, e := range examples {
+			examples := strings.SplitSeq(p.Example, ",")
+			for e := range examples {
 				flags = append(flags, fmt.Sprintf("-F '%s=%s'", p.Name, e))
 			}
 			continue
@@ -167,7 +167,7 @@ func (e Endpoint) ExampleRequest() string {
 // type.
 func (e Endpoint) ResponseStructure() string {
 	res := e.Response.JSONStructure()
-	var i interface{}
+	var i any
 	if err := json.Unmarshal([]byte(res), &i); err != nil {
 		return ""
 	}

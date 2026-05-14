@@ -28,7 +28,7 @@ func Generate(api clientgen.API) ([]clientgen.File, error) {
 	return fl, nil
 }
 
-func generatePythonFile(fileName, tplName string, c interface{}) (
+func generatePythonFile(fileName, tplName string, c any) (
 	clientgen.File, error) {
 
 	funcMap := template.FuncMap{
