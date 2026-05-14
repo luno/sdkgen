@@ -312,6 +312,15 @@ func convertType(spec *openapi.Swagger, api *API, p *simpleSchema,
 		return
 	}
 
+	// If the referenced definition is a primitive (e.g., a named alias like
+	// DecimalFloat which is `{type: "string", format: "amount"}`), convert it
+	// as if the schema were inlined rather than emitting an empty named
+	// struct. Without this, named scalar aliases generate `type Foo struct{}`
+	// and silently discard their values when JSON-unmarshaled.
+	if len(schema.Type) > 0 && schema.Type[0] != "object" {
+		return convertType(spec, api, schemaToSimpleSchema(*schema), seen)
+	}
+
 	typ.Kind = KindStruct
 	typ.Name = name
 

@@ -80,6 +80,13 @@ func TestConvertSpec(t *testing.T) {
 													Kind: KindTimestamp,
 												},
 											},
+											{
+												Name:        "field4",
+												Description: []string{"Amount via named scalar alias"},
+												Type: Type{
+													Kind: KindDecimal,
+												},
+											},
 										},
 									},
 								},
